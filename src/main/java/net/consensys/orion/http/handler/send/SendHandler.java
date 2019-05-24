@@ -108,6 +108,7 @@ public class SendHandler implements Handler<RoutingContext> {
     } else if (sendRequest.privacyGroupId().isPresent()) {
       privacyGroupStorage.get(sendRequest.privacyGroupId().get()).thenApply((result) -> {
         List<Box.PublicKey> toKeys = Arrays.stream(result.get()).map(enclave::readKey).collect(Collectors.toList());
+        toKeys.remove(fromKey);
         send(routingContext, sendRequest, fromKey, toKeys);
         return result;
       });
